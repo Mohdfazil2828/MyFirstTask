@@ -1,23 +1,16 @@
 package com.myfirsttask.Activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -26,9 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.myfirsttask.Model.LoginResponse;
-import com.myfirsttask.Model.User;
 import com.myfirsttask.R;
-import com.myfirsttask.SharePref.Utils;
 import com.myfirsttask.UserApi.RetrofitClient;
 
 import retrofit2.Call;
@@ -95,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void displayNotification() {
+/*    private void displayNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.backfourvendor)
                 .setContentTitle("Hey It's Working...")
@@ -106,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notificationManagerCompat.notify(1, builder.build());
 
 
-    }
+    }*/
 
     private void userLogin() {
 
@@ -132,12 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if (haveNetworkConnection()) {
-
-        } else {
-            Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_LONG).show();
-        }
-
 
         Call<LoginResponse> call = RetrofitClient.getInstance().getApi().login(email, password);
 
@@ -146,13 +131,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 LoginResponse loginResponse = response.body();
 
-                if (loginResponse.getSuccess() == 1) {
-                    displayNotification();
+                if (loginResponse.getSuccess() == 1 && haveNetworkConnection()) {
+
+                    /*Utils.setIsLoginApi(getApplicationContext(), "" + loginResponse.getApi_code());
+
+                    Log.e("code", "" + loginResponse.getApi_code());*/
+
                     Toast.makeText(getApplicationContext(), loginResponse.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
+
+                } else if (loginResponse.getSuccess() != 1) {
                     Snackbar.make(layoutLinear, loginResponse.getMessage(), Snackbar.LENGTH_LONG).show();
+                } else if (!haveNetworkConnection()) {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 }
             }
+
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {

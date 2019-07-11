@@ -21,15 +21,17 @@
             android:paddingBottom="32dp">
 
             <ImageView
-                android:layout_width="387dp"
-                android:layout_height="134dp"
+                android:layout_width="250dp"
+                android:layout_height="110dp"
+                android:paddingTop="20dp"
+                android:layout_marginTop="20dp"
                 app:srcCompat="@drawable/backfourlogo" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:fontFamily="@font/quamaine"
                 android:gravity="center"
                 android:text="Welcome to BACKFOUR"

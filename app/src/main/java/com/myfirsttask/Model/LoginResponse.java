@@ -4,18 +4,16 @@ public class LoginResponse {
 
     private int success;
     private String message;
-    private User user;
+    private Record api_code;
 
-    public LoginResponse(int success, String message, User user) {
-        this.success = success;
-        this.message = message;
-        this.user = user;
+    public LoginResponse() {
     }
 
     public int getSuccess() {
         return success;
     }
 
+    
     public void setSuccess(int success) {
         this.success = success;
     }
@@ -28,11 +26,12 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public Record getApi_code() {
+        return api_code;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setApi_code(Record api_code) {
+        this.api_code = api_code;
     }
 }
+
