@@ -79,7 +79,7 @@ public class GroundsFragment extends Fragment {
     private void getGroundList() {
 
         Call<GroundResponse> call = RetrofitClient
-                .getInstance().getApi().ground();
+                .getInstance().getApi().ground("");
 
         call.enqueue(new Callback<GroundResponse>() {
             @Override

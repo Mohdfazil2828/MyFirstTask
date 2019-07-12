@@ -26,7 +26,7 @@ public class GroundRecyeclerAdapter extends RecyclerView.Adapter<GroundRecyecler
 
     public GroundRecyeclerAdapter(GroundsFragment context, ArrayList<GroundResponse> recordArrayList) {
 
-        this.recordArrayList = recordArrayList;
+        this.groundResponseArrayList = groundResponseArrayList;
         this.context = context;
     }
 
