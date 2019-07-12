@@ -4,7 +4,7 @@ public class LoginResponse {
 
     private int success;
     private String message;
-    private Record api_code;
+    private Record record;
 
     public LoginResponse() {
     }
@@ -26,12 +26,12 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public Record getApi_code() {
-        return api_code;
+    public Record getRecord() {
+        return record;
     }
 
-    public void setApi_code(Record api_code) {
-        this.api_code = api_code;
+    public void setRecord(Record record) {
+        this.record = record;
     }
 }
 

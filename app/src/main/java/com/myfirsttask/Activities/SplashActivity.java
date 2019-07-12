@@ -27,22 +27,6 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (task.isSuccessful()) {
-
-                            String token = task.getResult().getToken();
-
-                            Utils.setIsToken(getApplicationContext(), token);
-
-                        } else {
-
-                        }
-                    }
-                });
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -50,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        }, 3000);
+        }, 2000);
 
     }
 }

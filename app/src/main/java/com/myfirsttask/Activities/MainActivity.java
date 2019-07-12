@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,8 +20,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.myfirsttask.Model.LoginResponse;
+import com.myfirsttask.Model.Record;
 import com.myfirsttask.R;
+import com.myfirsttask.SharePref.Utils;
 import com.myfirsttask.UserApi.RetrofitClient;
 
 import retrofit2.Call;
@@ -27,6 +35,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Record record;
 
     private static final String CHANNEL_ID = "myFirst_Task";
     private static final String CHANNEL_NAME = "myFirstTask";
@@ -63,12 +73,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+/*        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(CHANNEL_DESC);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
-        }
+        }*/
+
+        /*
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (task.isSuccessful()) {
+
+                                String token = task.getResult().getToken();
+
+                                Utils.setIsToken(getApplicationContext(), token);
+
+                            } else {
+
+                            }
+                        }
+                    });
+        */
 
         useremail = findViewById(R.id.useremail);
         userpassword = findViewById(R.id.userpassword);
@@ -77,27 +106,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.btnlogin).setOnClickListener(this);
 
-        /*if (Utils.getIsLoggedIn(MainActivity.this).equals("0")) {
+        if (Utils.getIsLoggedIn(MainActivity.this).equals("1")) {
             Intent i = new Intent(MainActivity.this, DashboardActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-        }*/
+        }
 
 
     }
-
-/*    private void displayNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.backfourvendor)
-                .setContentTitle("Hey It's Working...")
-                .setContentText("My First Notification")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(1, builder.build());
-
-
-    }*/
 
     private void userLogin() {
 
@@ -124,34 +140,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        Call<LoginResponse> call = RetrofitClient.getInstance().getApi().login(email, password);
+        if (haveNetworkConnection()) {
 
-        call.enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                LoginResponse loginResponse = response.body();
+            Call<LoginResponse> call = RetrofitClient
+                    .getInstance().getApi().login(email, password);
 
-                if (loginResponse.getSuccess() == 1 && haveNetworkConnection()) {
+            call.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    LoginResponse loginResponse = response.body();
 
-                    /*Utils.setIsLoginApi(getApplicationContext(), "" + loginResponse.getApi_code());
+                    record = loginResponse.getRecord();
 
-                    Log.e("code", "" + loginResponse.getApi_code());*/
+                    if (loginResponse.getSuccess() == 1) {
 
-                    Toast.makeText(getApplicationContext(), loginResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(MainActivity.this, DashboardActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        Utils.setIsLoginApi(getApplicationContext(), record.getApi_code());
+                        Toast.makeText(getApplicationContext(), loginResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                } else if (loginResponse.getSuccess() != 1) {
-                    Snackbar.make(layoutLinear, loginResponse.getMessage(), Snackbar.LENGTH_LONG).show();
-                } else if (!haveNetworkConnection()) {
-                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                        Log.e("code", "" + record.getApi_code());
+
+                    } else {
+                        Snackbar.make(layoutLinear, loginResponse.getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
                 }
-            }
 
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
 
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                }
+            });
 
-            }
-        });
+        } else if (!haveNetworkConnection()) {
+            Snackbar.make(layoutLinear, "No Internet Connection", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override

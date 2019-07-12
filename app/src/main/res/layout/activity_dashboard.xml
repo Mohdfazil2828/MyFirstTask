@@ -8,12 +8,15 @@
     tools:context=".Activities.DashboardActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/admin_toolbar"
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
         tools:targetApi="lollipop"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary"
+        app:menu="@menu/user_navigation">
+    </android.support.v7.widget.Toolbar>
+
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -25,12 +28,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/admin_navigation"
+        android:id="@+id/user_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:itemIconTint="@color/cardview_light_background"
-        app:itemTextColor="@color/colorBackground"
+        app:itemTextColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
