@@ -20,6 +20,7 @@ public interface Api {
     @FormUrlEncoded
     @POST("api/ground/groundList")
     Call<GroundResponse> ground(
+            @Field("api_code") String api_code
     );
 
 }

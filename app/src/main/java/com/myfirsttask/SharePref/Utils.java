@@ -11,6 +11,7 @@ public class Utils {
     private static final String IS_LOGGED_IN = "isLoggedIn";
     private static final String IS_LOGIN_API = "isLoginApi";
     private static final String IS_TOKEN = "isToken";
+    private static final String IS_GROUND_LIST = "isGroundList";
 
 
     private static SharedPreferences sharedPreferences;
@@ -69,6 +70,23 @@ public class Utils {
 
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         status = sharedPreferences.getString(IS_LOGIN_API, "0");
+
+        return status;
+    }
+
+    public static void setIsGroundList(Context context, String status) {
+        sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putString(IS_GROUND_LIST, status);
+        editor.commit();
+    }
+
+    public static String getIsGroundList(Context context) {
+
+        String status;
+
+        sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        status = sharedPreferences.getString(IS_GROUND_LIST, "0");
 
         return status;
     }
