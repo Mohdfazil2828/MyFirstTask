@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.myfirsttask.Model.GroundResponse;
@@ -19,7 +20,7 @@ public class GroundRecyeclerAdapter extends RecyclerView.Adapter<GroundRecyecler
 
     private GroundsFragment context;
 
-    private ArrayList<Record> recordArrayList = new ArrayList<Record>();
+    Record record;
     private ArrayList<GroundResponse> groundResponseArrayList = new ArrayList<GroundResponse>();
 
 
@@ -42,23 +43,21 @@ public class GroundRecyeclerAdapter extends RecyclerView.Adapter<GroundRecyecler
     @Override
     public void onBindViewHolder(GroundRecyeclerAdapter.MyViewHolder myViewHolder, final int position) {
 
-        Record record = recordArrayList.get(position);
 
         GroundResponse groundResponse = groundResponseArrayList.get(position);
 
         final String groundId = String.valueOf(groundResponseArrayList.get(position).getRecord());
 
+
         myViewHolder.textgroundnameTextView.setText(record.getGroundname());
         myViewHolder.textlocationnameTextView.setText(record.getLocation_name());
         myViewHolder.texteventtypenameTextView.setText(record.getEvent_type_name());
-
-
-
 
     }
 
     @Override
     public int getItemCount() {
+
         return groundResponseArrayList.size();
     }
 
@@ -72,9 +71,16 @@ public class GroundRecyeclerAdapter extends RecyclerView.Adapter<GroundRecyecler
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView textgroundnameTextView, textlocationnameTextView, texteventtypenameTextView;
 
+        private ImageView groundImageView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            groundImageView = itemView.findViewById(R.id.imageview);
+            textgroundnameTextView = itemView.findViewById(R.id.textview1);
+            textlocationnameTextView = itemView.findViewById(R.id.textview2);
+            texteventtypenameTextView = itemView.findViewById(R.id.textview3);
+
         }
     }
 }

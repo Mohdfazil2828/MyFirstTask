@@ -1,28 +1,18 @@
 package com.myfirsttask.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.myfirsttask.Activities.DashboardActivity;
-import com.myfirsttask.Activities.MainActivity;
 import com.myfirsttask.Model.GroundResponse;
-import com.myfirsttask.Model.LoginResponse;
 import com.myfirsttask.Model.Record;
 import com.myfirsttask.R;
 import com.myfirsttask.SharePref.Utils;
@@ -42,6 +32,8 @@ public class GroundsFragment extends Fragment {
 
     @BindView(R.id.recyeclerview)
     RecyclerView recyclerView;
+
+    Record record;
 
 
     private GroundRecyeclerAdapter mAdapter;
@@ -68,26 +60,38 @@ public class GroundsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_grounds, container, false);
         ButterKnife.bind(GroundsFragment.this, view);
 
+
+        getGroundList();
         setUpRecyclerView();
         addValuesArrayList();
 
-        getGroundList();
+
 
         return view;
     }
 
     private void getGroundList() {
 
-        Call<GroundResponse> call = RetrofitClient
-                .getInstance().getApi().ground("");
+        Call<GroundResponse> call = RetrofitClient.getInstance().getApi().ground("");
 
         call.enqueue(new Callback<GroundResponse>() {
             @Override
             public void onResponse(Call<GroundResponse> call, Response<GroundResponse> response) {
                 GroundResponse groundResponse = response.body();
 
+                record = groundResponse.getRecord();
+
                 if (groundResponse.getSuccess() == 1) {
 
+
+
+                    mAdapter.updateData(groundResponses);
+
+
+                    Utils.setIsGroundList(getContext(), record.getGroundname());
+                    Utils.setIsGroundList(getContext(), record.getGroundimage());
+                    Utils.setIsGroundList(getContext(), record.getLocation_name());
+                    Utils.setIsGroundList(getContext(), record.getEvent_type_name());
 
                 } else {
                 }
@@ -118,7 +122,6 @@ public class GroundsFragment extends Fragment {
     }
 
     private void addValuesArrayList() {
-        mAdapter.updateData(groundResponses);
     }
 
     private void setUpRecyclerView() {

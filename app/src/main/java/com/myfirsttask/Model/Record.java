@@ -13,8 +13,13 @@ public class Record {
 
     }
 
+
     public String getApi_code() {
         return api_code;
+    }
+
+    public String getGround_id() {
+        return ground_id;
     }
 
     public String getGroundname() {
